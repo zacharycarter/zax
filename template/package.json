@@ -1,0 +1,11 @@
+{
+  "name": "zax_default_template",
+  "version": "1.0.0",
+  "description": "Default template for zax ssg",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
