@@ -9,3 +9,4 @@ license       = "MIT"
 
 requires "nim >= 0.17.1"
 requires "karax >= 0.1.0"
+requires "zax >= 0.1.1"

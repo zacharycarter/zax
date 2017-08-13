@@ -26,6 +26,7 @@ layout: post
 title: "$1"
 date: $2
 ---
+Hello Zax!
 """
 
 proc isEmpty(directory: string): bool = 
