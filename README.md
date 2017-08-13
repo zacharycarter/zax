@@ -1,5 +1,5 @@
 # zax
-SSG for Karax
+SSG for [Karax](https://github.com/pragmagic/karax)
 
 1) Clone and install zax
 ```bash
