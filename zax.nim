@@ -1,4 +1,4 @@
-import os, osproc, asynchttpserver, asyncdispatch, strutils, httpd, mimetypes, times
+import os, osproc, asynchttpserver, asyncdispatch, strutils, httpd, mimetypes, times, sequtils, nre
 
 let doc = """
 zax - a static site generator for karax.
@@ -7,6 +7,7 @@ Usage:
   zax new <name> [-f | --force]
   zax build
   zax run
+  zax create (post) <title>
   zax (-h | --help)
 
 Options:
@@ -19,6 +20,14 @@ import docopt
 
 let args = docopt(doc, version = "zax 0.1.0")
 
+const newPostContent = """
+---
+layout: post
+title: "$1"
+date: $2
+---
+"""
+
 proc isEmpty(directory: string): bool = 
   result = true
 
@@ -26,15 +35,28 @@ proc isEmpty(directory: string): bool =
     result = false
     break
 
-proc createNewProject(projectName: string) =
-  createDir(projectName)
-  copyDir("template", projectName)
-
 proc checkProjectDir(): bool =
   result = true
   if not fileExists("zax.nims"):
     echo "Missing zax.nims! Ensure you are running this command from within a zax project!"
     result = false
+
+proc createNewPost(postTitle: string) =
+  if not checkProjectDir():
+    quit(QUIT_SUCCESS)
+  else:
+    setCurrentDir("./_posts")
+    var sanitizedTitle = toLowerAscii(postTitle.replace(re"[^a-zA-Z0-9 -]", ""))
+    let currentDateTime = getTime().getLocalTime()
+    writeFile("$1-$2" % [currentDateTime.format("yyyy-MM-dd"), sanitizedTitle], newPostContent % [postTitle, currentDateTime.format("yyyy-MM-dd HH:mm:ss z")])
+
+proc createNewProject(projectName: string) =
+  createDir(projectName)
+  copyDir("template", projectName)
+  setCurrentDir(projectName)
+  createNewPost("Hello Zax!")
+
+      
 
 proc buildProject() =
   echo "Installing dependencies..."
@@ -107,3 +129,6 @@ if args["new"]:
   else:
     createNewProject(projectName)
       
+if args["create"]:
+  if args["post"]:
+    createNewPost($args["<title>"])
