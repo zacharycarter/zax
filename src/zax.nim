@@ -1,4 +1,6 @@
-import os, osproc, asynchttpserver, asyncdispatch, strutils, httpd, mimetypes, times, sequtils, nre, macros
+import os, osproc, asynchttpserver, asyncdispatch, strutils, httpd, mimetypes, times, sequtils, nre, streams
+
+import zax_content, zax_parser
 
 let doc = """
 zax - a static site generator for karax.
@@ -22,9 +24,11 @@ let args = docopt(doc, version = "zax 0.1.0")
 
 const newPostContent = """
 ---
-layout: post
-title: "$1"
-date: $2
+{
+  "layout": "post",
+  "title": "$1",
+  "date": "$2"
+}
 ---
 Hello Zax!
 """
@@ -69,7 +73,12 @@ proc createNewProject(projectName: string) =
 proc buildProject() =
   echo "Installing dependencies..."
   echo execProcess("nimble install -y")
-  
+
+  var zax = newFileStream("src/posts.nim", fmWrite)
+  zax.setPosition(0)
+  zax.write(compile(parsePosts(), ContentKind.Post))
+  zax.close()
+
   echo "Compiling sources..."
   echo execProcess("nim js src/main.nim")
 
@@ -89,10 +98,11 @@ proc watchProject() =
 
       if lastWriteTime < writeTime:
         echo "Write detected on " & getCurrentDir()
-        lastWriteTime = writeTime
         buildProject()
-
-    sleep(200)
+        lastWriteTime = getTime()
+    
+    sleep(20)
+        
 
 
 if args["build"]:

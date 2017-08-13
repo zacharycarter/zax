@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.1"
+version       = "0.1.2"
 author        = "Zachary Carter"
 description   = "SSG for Karax"
 license       = "MIT"
@@ -12,4 +12,4 @@ srcDir = "src"
 
 requires "nim >= 0.17.1"
 requires "docopt >= 0.6.5"
-requires "zip >= 0.1.1"
+requires "yaml >= 0.10.1"

@@ -1,8 +1,7 @@
-import vdom, karax, karaxdsl, zax_template, zax_translate
+import vdom, karax, karaxdsl
 
 proc createDom(): VNode =
   result = buildHtml(tdiv(class="main")):
-    tdiv():
-      zax(ContentKind.Post)
+    include posts
 
 setRenderer createDom

@@ -1,3 +1,3 @@
-return buildHtml(tdiv(class="post")):
-  article(class="post-content"):
-    content
+  tdiv(class="post"):
+    article(class="post-content"):
+      {{content}}
