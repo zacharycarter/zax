@@ -1,4 +1,4 @@
-import os, osproc, asynchttpserver, asyncdispatch, strutils, httpd, mimetypes, times, sequtils, nre
+import os, osproc, asynchttpserver, asyncdispatch, strutils, httpd, mimetypes, times, sequtils, nre, macros
 
 let doc = """
 zax - a static site generator for karax.
@@ -45,14 +45,21 @@ proc createNewPost(postTitle: string) =
   if not checkProjectDir():
     quit(QUIT_SUCCESS)
   else:
-    setCurrentDir("./_posts")
+    const postDir = "./_posts"
+    
+    if dirExists(postDir):
+      setCurrentDir(postDir)
+    else:
+      createDir(postDir)
+      setCurrentDir(postDir)
+
     var sanitizedTitle = toLowerAscii(postTitle.replace(re"[^a-zA-Z0-9 -]", ""))
     let currentDateTime = getTime().getLocalTime()
     writeFile("$1-$2" % [currentDateTime.format("yyyy-MM-dd"), sanitizedTitle], newPostContent % [postTitle, currentDateTime.format("yyyy-MM-dd HH:mm:ss z")])
 
 proc createNewProject(projectName: string) =
   createDir(projectName)
-  copyDir("template", projectName)
+  copyDir(getAppDir() & DirSep & "template", projectName)
   setCurrentDir(projectName)
   createNewPost("Hello Zax!")
 
