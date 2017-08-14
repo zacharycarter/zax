@@ -24,6 +24,6 @@ proc parsePosts*(): string =
     for capture in temp.find(re"{{(.*)}}").get.captures:
       case capture
       of "content":
-        p = temp.replace("{{content}}", """  text("$1")""" % strip(content) & " \n")
-    
-    result &= p
+        p = temp.replace("{{content}}", "text(\"\"\"$1\"\"\")" % strip(content) & " \n")
+
+    result &= indent(p, 4)

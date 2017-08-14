@@ -23,4 +23,4 @@ iterator posts*(): string =
 proc compile*(content: string, contentKind: ContentKind): string =
   case contentKind
   of ContentKind.Post:
-    result = "return buildHtml(tdiv(class=\"posts-container\")):\n" & content
+    result = "  return buildHtml(tdiv(class=\"posts-container\")):\n" & content

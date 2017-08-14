@@ -31,6 +31,7 @@ const newPostContent = """
 }
 ---
 Hello Zax!
+This is pretty cool!
 """
 
 proc isEmpty(directory: string): bool = 
@@ -81,6 +82,8 @@ proc buildProject() =
 
   echo "Compiling sources..."
   echo execProcess("nim js src/main.nim")
+
+  discard execProcess("open index.html")
 
 proc watchProject() =
   var
